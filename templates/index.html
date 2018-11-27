@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>山海经</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static "style/index.css" %}"/>
+</head>
+<body>
+    <div class="panel">
+        <h1>《山海经》全部异兽图 你认识其中几个</h1>
+        {% for shj in shj %}
+            <p><strong>{{ shj.name }}</strong></p>
+            <p><img class="pic" src="{% static "images/" %}{{ shj.image }}" alt=""></p>
+            <p>{{ shj.original }}</p>
+            <p>{{ shj.note }}</p>
+            <p>{{ shj.translation }}</p>
+        {% endfor %}
+        <div class="comment">
+            <div class="commentHeader">
+                <div class="left">我来说两句</div>
+                <div class="right"><span class="count">{{ message|length }}</span>人留言</div>
+            </div>
+            <form class="commentPanel" action="{% url 'shjGuestbookUrl:index' %}submitComment/" method="post">
+                <textarea class="text" name="text"></textarea>
+                {% csrf_token %}
+                <input class="submit" type="submit" value="留言"/>
+            </form>
+        </div>
+
+        <div class="message">
+            {% for message in message %}
+                <div class="messageItem">
+                    <div class="messageContent">{{ message.content | linebreaksbr }}</div>
+                    <div class="messageTime">{{ message.time | date:"m-d H:i" }}</div>
+                </div>
+            {% empty %}
+                <div class="empty">还没有评论，快来抢沙发吧！</div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
